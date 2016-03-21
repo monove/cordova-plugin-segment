@@ -1,6 +1,6 @@
 #import "AnalyticsPlugin.h"
 #import <Cordova/CDV.h>
-#import <Analytics.h>
+#import <Analytics/SEGAnalytics.h>
 
 @implementation AnalyticsPlugin : CDVPlugin
 
@@ -30,10 +30,11 @@
     NSString* writeKey = self.commandDelegate.settings[writeKeyPreferenceName] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:writeKeyPListName];
     
     if (writeKey.length) {
-        NSString* useLocationServices = self.commandDelegate.settings[@"analytics_use_location_services"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AnalyticsUserLocationServices"];
+         NSString* useLocationServices = self.commandDelegate.settings[@"analytics_use_location_services"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AnalyticsUserLocationServices"];
 
         SEGAnalyticsConfiguration *configuration = [SEGAnalyticsConfiguration configurationWithWriteKey:writeKey];
         configuration.shouldUseLocationServices = [useLocationServices boolValue];
+        configuration.flushAt = 1;
         [SEGAnalytics setupWithConfiguration:configuration];
     } else {
         NSLog(@"[cordova-plugin-segment] ERROR - Invalid write key");
